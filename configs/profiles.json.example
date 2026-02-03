@@ -1,0 +1,34 @@
+{
+  "profiles": {
+    "default": {
+      "type": "t3.large",
+      "spot_price": "0.10",
+      "description": "General purpose, 2 vCPU, 8GB RAM"
+    },
+    "compute": {
+      "type": "c5.xlarge",
+      "spot_price": "0.20",
+      "description": "Compute optimized, 4 vCPU, 8GB RAM"
+    },
+    "memory": {
+      "type": "r5.large",
+      "spot_price": "0.15",
+      "description": "Memory optimized, 2 vCPU, 16GB RAM"
+    },
+    "gpu-t4": {
+      "type": "g4dn.xlarge",
+      "spot_price": "0.30",
+      "description": "1x T4 GPU, 16GB VRAM"
+    },
+    "gpu-v100": {
+      "type": "p3.2xlarge",
+      "spot_price": "0.55",
+      "description": "1x V100 GPU, 16GB VRAM"
+    },
+    "gpu-a10g": {
+      "type": "g5.xlarge",
+      "spot_price": "0.60",
+      "description": "1x A10G GPU, 24GB VRAM"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "instances": [
+    {
+      "num": 1,
+      "ip": "",
+      "start": 1000000,
+      "end": 2000000,
+      "desc": "Range1"
+    },
+    {
+      "num": 2,
+      "ip": "",
+      "start": 2000001,
+      "end": 3000000,
+      "desc": "Range2"
+    },
+    {
+      "num": 3,
+      "ip": "",
+      "start": 3000001,
+      "end": 4000000,
+      "desc": "Range3"
+    }
+  ]
+}

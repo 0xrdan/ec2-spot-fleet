@@ -1,0 +1,23 @@
+# Configuration files with secrets
+fleet.env
+*-credentials.env
+*.credentials
+
+# Instance state
+.state/
+*.log
+
+# Actual config files (use .example versions in repo)
+configs/instances.json
+configs/profiles.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
