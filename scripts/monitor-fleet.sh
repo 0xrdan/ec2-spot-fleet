@@ -37,6 +37,7 @@ mkdir -p "$STATE_DIR"
 
 OFFLINE_ALERT_FILE="$STATE_DIR/offline_alerted.txt"
 RECOVERING_FILE="$STATE_DIR/recovering.txt"
+RECOVERY_LOCK="$STATE_DIR/recovery_lock.txt"
 touch "$OFFLINE_ALERT_FILE" 2>/dev/null || true
 touch "$RECOVERING_FILE" 2>/dev/null || true
 
@@ -168,6 +169,22 @@ To resume, run:
 
                 # Auto-recover if enabled
                 if $AUTO_RECOVER && ! grep -q "^$num$" "$RECOVERING_FILE" 2>/dev/null; then
+                    # Check global recovery lock - only one recovery at a time
+                    if [[ -f "$RECOVERY_LOCK" ]]; then
+                        local lock_age=$(( $(date +%s) - $(stat -c %Y "$RECOVERY_LOCK" 2>/dev/null || echo 0) ))
+                        if [[ $lock_age -lt 900 ]]; then  # 15 minute lock timeout
+                            echo "  -> Another recovery in progress (lock age: ${lock_age}s), skipping"
+                            echo "  -> Will retry on next monitor cycle"
+                            continue
+                        else
+                            echo "  -> Stale recovery lock (${lock_age}s old), removing..."
+                            rm -f "$RECOVERY_LOCK"
+                        fi
+                    fi
+
+                    # Acquire lock
+                    echo "$num $(date +%s)" > "$RECOVERY_LOCK"
+
                     echo "$num" >> "$RECOVERING_FILE"
                     echo "  -> AUTO-RECOVERING instance $num..."
 
@@ -219,6 +236,13 @@ $error_tail
 Manual recovery:
   ./scripts/recover-job.sh $num"
                     fi
+
+                    # Release global lock
+                    rm -f "$RECOVERY_LOCK"
+
+                    # Only recover ONE instance per monitor cycle to prevent resource contention
+                    echo "  -> Recovery cycle complete. Other offline instances will be handled next cycle."
+                    break
                 fi
             fi
             continue
